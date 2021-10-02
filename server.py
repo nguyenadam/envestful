@@ -1,90 +1,88 @@
-from flask import Flask, render_template, redirect, request, session, make_response,session,redirect
-import urllib.parse
-import requests
-app = Flask('app')
-app.secret_key = 'dfjasdflhewnfvewnjg2ion2e'
+from flask import Flask, render_template, redirect, request, session, redirect
+import time
+from utils import *
+from td.client import TDClient
+from secret_list import *
 
-client_id = 'H19TZLKXVJ3GAITABQTFUIBOPNAIMMOC'
+app = Flask("app")
+app.secret_key = SECRET_KEY
 
-def grab_url() -> dict:
-    """Builds the URL that is used for oAuth."""
 
-    # prepare the payload to login
-    data = {
-        'response_type': 'code',
-        'redirect_uri': 'https://google.com',
-        'client_id': 'H19TZLKXVJ3GAITABQTFUIBOPNAIMMOC' + '@AMER.OAUTHAP'
-    }
+def get_token(session):
+    token_info = session.get("token_info", None)
 
-    # url encode the data.
-    params = urllib.parse.urlencode(data)
+    # Checking if the session already has a token stored
+    if not token_info or "refresh_token" not in token_info:
+        return None
 
-    # build the full URL for the authentication endpoint.
-    url = "https://auth.tdameritrade.com/auth?" + params
+    # Refreshing token if it has expired
+    if token_info.get("expires_in") < 0:
+        token_info = refresh_access_token(token_info.get("refresh_token"))
 
-    return url
+    session["token_info"] = {**session["token_info"], **token_info}
+    return token_info
 
-def exchange_code_for_token(code: str, return_refresh_token: bool) -> dict:
-    """Access token handler for AuthCode Workflow.
-    ### Overview:
-    ----
-    This takes the authorization code parsed from
-    the auth endpoint to call the token endpoint
-    and obtain an access token.
-    ### Returns:
-    ----
-    {bool} -- `True` if successful, `False` otherwise.
-    """
 
-    # # Parse the URL
-    # url_dict = urllib.parse.parse_qs(code)
+@app.route("/")
+def home():
+    return render_template("home.html")
 
-    # # Grab the Code.
-    # url_code = list(url_dict.values())[0][0]
-    url_code = code
 
-    # Define the parameters of our access token post.
-    data = {
-        'grant_type': 'authorization_code',
-        'client_id': client_id + '@AMER.OAUTHAP',
-        'code': url_code,
-        'redirect_uri': 'https://google.com'
-    }
+@app.route("/login")
+def login():
+    return redirect(build_login_url(), 302)
 
-    if return_refresh_token:
-        data['access_type'] = 'offline'
 
-    # Make the request.
-    response = requests.post(
-        url="https://api.tdameritrade.com/v1/oauth2/token",
-        headers={'Content-Type': 'application/x-www-form-urlencoded'},
-        data=data
-    )
-    
-    if response.ok:
-        return response.json()
-        # self._token_save(
-        #     token_dict=response.json(),
-        #     includes_refresh=True
-        # )
-
-        return True
-
-@app.route('/login')
-def verify():
-
-    link = grab_url()
-    print(link)
-    return redirect(link, 302)
-
-@app.route('/api_callback')
+@app.route("/callback")
 def api_callback():
-    session.clear()
-    code = request.args.get('code')
-    token = exchange_code_for_token(code, True)
-    print(token)
-    # Saving the access token along with all other token related info
-    # session["token_info"] = token_info
 
-    return redirect("index")
-app.run(host='0.0.0.0', port=8080)
+    session.clear()
+    code = request.args.get("code")
+    token_info = get_access_token(code)
+
+    # Saving the access token along with all other token related info
+    session["token_info"] = token_info
+
+    return redirect("/app")
+
+
+@app.route("/app")
+def go():
+
+    session["token_info"] = get_token(session)
+    session.modified = True
+
+    if not session["token_info"]:
+        return redirect("/login")
+
+    # Create a new session, credentials path is required.
+    TDSession = TDClient(
+        client_id=CLIENT_ID, redirect_uri=REDIRECT_URI, credentials_path="td_state.json"
+    )
+
+    # Login to the session
+    TDSession.login()
+
+    accounts = [
+        account["securitiesAccount"]
+        for account in TDSession.get_accounts(fields=["positions"])
+        if "securitiesAccount" in account
+    ]
+
+    holdings = {}
+
+    for account in accounts:
+        positions = account["positions"]
+
+        for stock in positions:
+            name = stock["instrument"]["symbol"]
+            value = stock["marketValue"]
+            if name not in holdings:
+                holdings[name] = value
+            else:
+                holdings[name] += value
+
+    return holdings
+
+
+app.run(host="0.0.0.0", port=8080, debug=True)

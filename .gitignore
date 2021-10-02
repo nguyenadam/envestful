@@ -1,2 +1,5 @@
 .venv
 td_state.json
+__pycache__/
+.vscode/
+secret_list.py
