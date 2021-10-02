@@ -8,6 +8,31 @@ app = Flask("app")
 app.secret_key = SECRET_KEY
 
 
+def get_positions(bearer):
+
+    BASE_URL = "https://api.tdameritrade.com/v1/accounts"
+    headers = {"Authorization": f"Bearer {bearer}"}
+
+    accounts = requests.get(BASE_URL, headers=headers).json()
+    holdings = {}
+
+    for account in accounts:
+
+        if "securitiesAccount" in account:
+            for position in account["securitiesAccount"]["positions"]:
+                if position["instrument"]["assetType"] == "EQUITY":
+
+                    name = position["instrument"]["symbol"]
+                    value = position["marketValue"]
+
+                    if name not in holdings:
+                        holdings[name] = value
+                    else:
+                        holdings[name] += value
+    
+    return holdings
+
+
 def get_token(session):
     token_info = session.get("token_info", None)
 
@@ -55,32 +80,22 @@ def go():
     if not session["token_info"]:
         return redirect("/login")
 
-    # Create a new session, credentials path is required.
-    TDSession = TDClient(
-        client_id=CLIENT_ID, redirect_uri=REDIRECT_URI, credentials_path="td_state.json"
-    )
+    print(session['token_info'])
+    # # Create a new session, credentials path is required.
+    # TDSession = TDClient(
+    #     client_id=CLIENT_ID, redirect_uri=REDIRECT_URI, credentials_path="td_state.json"
+    # )
 
-    # Login to the session
-    TDSession.login()
+    # # Login to the session
+    # TDSession.login()
 
-    accounts = [
-        account["securitiesAccount"]
-        for account in TDSession.get_accounts(fields=["positions"])
-        if "securitiesAccount" in account
-    ]
+    # accounts = [
+    #     account["securitiesAccount"]
+    #     for account in TDSession.get_accounts(fields=["positions"])
+    #     if "securitiesAccount" in account
+    # ]
 
-    holdings = {}
-
-    for account in accounts:
-        positions = account["positions"]
-
-        for stock in positions:
-            name = stock["instrument"]["symbol"]
-            value = stock["marketValue"]
-            if name not in holdings:
-                holdings[name] = value
-            else:
-                holdings[name] += value
+    holdings = get_positions(session["token_info"]["access_token"])
 
     return holdings
 
