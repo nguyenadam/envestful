@@ -10,14 +10,14 @@ app.secret_key = SECRET_KEY
 
 def get_positions(bearer):
 
-    BASE_URL = "https://api.tdameritrade.com/v1/accounts"
+    BASE_URL = "https://api.tdameritrade.com/v1/accounts?fields=positions"
     headers = {"Authorization": f"Bearer {bearer}"}
 
     accounts = requests.get(BASE_URL, headers=headers).json()
     holdings = {}
 
     for account in accounts:
-
+        print(account)
         if "securitiesAccount" in account:
             for position in account["securitiesAccount"]["positions"]:
                 if position["instrument"]["assetType"] == "EQUITY":
