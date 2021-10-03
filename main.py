@@ -1,11 +1,17 @@
-from flask import Flask, render_template, redirect, request, session, redirect
+from flask import Flask, render_template, redirect, request, session, redirect, jsonify
 import time
 from utils import *
 from td.client import TDClient
 from secret_list import *
+import json
 
 app = Flask("app")
 app.secret_key = SECRET_KEY
+
+with open('data.json') as f:
+    esg_data = json.load(f)
+
+    esg_data = {k.split('.')[0]: v for k, v in esg_data.items()}
 
 
 def get_positions(bearer):
@@ -51,6 +57,11 @@ def get_token(session):
 def home():
     return render_template("home.html")
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect('/')
+
 
 @app.route("/login")
 def login():
@@ -79,24 +90,12 @@ def go():
     if not session["token_info"]:
         return redirect("/login")
 
-    print(session['token_info'])
-    # # Create a new session, credentials path is required.
-    # TDSession = TDClient(
-    #     client_id=CLIENT_ID, redirect_uri=REDIRECT_URI, credentials_path="td_state.json"
-    # )
-
-    # # Login to the session
-    # TDSession.login()
-
-    # accounts = [
-    #     account["securitiesAccount"]
-    #     for account in TDSession.get_accounts(fields=["positions"])
-    #     if "securitiesAccount" in account
-    # ]
-
     holdings = get_positions(session["token_info"]["access_token"])
 
-    return holdings
+    stock_objs = [{'symbol': stock, 'amount': amount, 'esg': esg_data[stock] if stock in esg_data else None} 
+        for stock, amount in holdings.items() if amount > 0]
+
+    return jsonify(stock_objs)
 
 
 app.run(host="0.0.0.0", port=8080, debug=True)

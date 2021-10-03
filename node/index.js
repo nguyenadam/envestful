@@ -13,8 +13,8 @@ const {
   css, 
   stats: {includedFiles}
 } = sass.renderSync({
-  // file: "styles.sass",
-  data
+  file: "styles.scss",
+//   data
 });
 
 const {
@@ -26,9 +26,9 @@ const {
   }
 } = new CleanCSS().minify(css);
 
-console.log("included files: ")
-includedFiles.forEach(x => console.log(x.split("node_modules/bulma/sass/")[1]))
+// console.log("included files: ")
+// includedFiles.forEach(x => console.log(x.split("node_modules/bulma/sass/")[1]))
 
 
-fs.writeFileSync("output.css", styles)
+fs.writeFileSync("../static/bulma.css", styles)
 

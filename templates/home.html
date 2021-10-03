@@ -3,17 +3,57 @@
 
 {% block content %}
 
+<div id="front-page-blob">
+    <img src="static/blob2.svg" class="ribbon" />
+</div>
+
+<div id="front-page-logo">
+    <img src="static/logo.png" class="ribbon" />
+</div>
 <div>
-    <section class="hero is-fullheight is-info">
+    <section class="hero is-fullheight">
         <div class="hero-body">
             <div>
-                <h1 class="title is-1">
+                <h1 class="title is-size-1-mobile tagline">
                     Envest in a better world.
                 </h1>
-                <a class="button is-success" href="/login">Sign in with TD Ameritrade</a>
+                <a class="button is-success is-rounded" href="/login">Sign in with TD Ameritrade</a>
             </div>
         </div>
     </section>
 </div>
 
+<style>
+    #front-page-blob {
+    position: relative;
+}
+#front-page-blob img {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 60%;
+    height: auto;
+    /* right: -100px;
+    width: 600px; 
+    height: 400px; */
+}
+
+#front-page-logo img {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 20%; 
+    height: auto;
+}
+
+.tagline {
+  max-width: 50%;
+  font-size: 5rem;
+
+}
+
+body {
+  background: floralwhite;
+}
+</style>
 {% endblock %}
