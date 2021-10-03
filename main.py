@@ -55,7 +55,6 @@ def get_token(session):
 
     return token_info
 
-
 @app.route("/")
 def home():
     return render_template("home.html")

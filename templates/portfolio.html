@@ -13,7 +13,7 @@
 
         <h1 class="title is-1">Build Your Portfolio</h1>
 
-        <form action="/custom" method="get">
+        <form onsubmit="disableEmptyInputs(this)" action="/custom" method="get">
 
         <input type="submit" class="button is-rounded is-large is-light is-primary" id="submit"/>
 
@@ -80,6 +80,13 @@
             contentTag: '#jetsContent'
         });
     }
+
+function disableEmptyInputs(form) {
+  var controls = form.elements;
+  for (var i=0, iLen=controls.length; i<iLen; i++) {
+    controls[i].disabled = controls[i].value == '';
+  }
+}
 </script>
 
 {% endblock %}
