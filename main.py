@@ -4,6 +4,7 @@ from utils import *
 from td.client import TDClient
 from secret_list import *
 import json
+from suggestions import suggestions
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -98,8 +99,24 @@ def go():
     stock_objs = [{'symbol': stock, 'amount': amount, 'esg': esg_data[stock] if stock in esg_data else None} 
         for stock, amount in holdings.items() if amount > 0]
 
-    print(session["token_info"])
-    print(holdings)
+    valid_stocks = [stock for stock in stock_objs if stock['esg']]
+    valid_cash = sum([stock['amount'] for stock in valid_stocks])
+
+    total_scores_cash = [ x['esg']['esgScore']['TR.TRESG']['score'] *( x['amount'] / valid_cash) for x in valid_stocks]
+    score = sum(total_scores_cash)
+
+    return render_template('data.html', data = json.dumps(stock_objs), stock_data = stock_objs, user_score = score)
+
+@app.route("/build")
+def build():
+    return render_template('portfolio.html', choices=suggestions)
+
+@app.route("/custom")
+def custom():
+    holdings = {k.split(".")[0]: float(v) for k, v in request.args.items() if v and v != ""}
+
+    stock_objs = [{'symbol': stock, 'amount': amount, 'esg': esg_data[stock] if stock in esg_data else None} 
+        for stock, amount in holdings.items() if amount > 0]
 
     valid_stocks = [stock for stock in stock_objs if stock['esg']]
     valid_cash = sum([stock['amount'] for stock in valid_stocks])
@@ -108,6 +125,7 @@ def go():
     score = sum(total_scores_cash)
 
     return render_template('data.html', data = json.dumps(stock_objs), stock_data = stock_objs, user_score = score)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)

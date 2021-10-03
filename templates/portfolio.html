@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<div id="front-page-blob">
+    <img src="static/blob1.svg" class="ribbon" />
+</div>
+
+<section class="section">
+    <div class="container">
+
+        <h1 class="title is-1">Build Your Portfolio</h1>
+
+        <form action="/custom" method="get">
+
+        <input type="submit" class="button is-rounded is-large is-light is-primary" id="submit"/>
+
+        <input type="text" class="input mb-2" id="jetsSearch" type="search">
+
+
+        <table class="table is-narrow is-striped is-fullwidth" >
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Symbol</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody id="jetsContent">
+                {% for choice in choices %}
+
+
+                <tr>
+                  <th>{{choice['companyName']}}</th>
+                  <td>{{choice['ricCode']}}</td>
+                  <td><input name="{{choice['ricCode']}}" type="text" class="input is-small"></td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </form>
+
+    </div>
+</section>
+
+<style>
+    #front-page-blob {
+        position: relative;
+    }
+
+    #front-page-blob img {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: auto;
+        /* right: -100px;
+    width: 600px; 
+    height: 400px; */
+    }
+
+    #submit{
+        top: 4rem;
+        right: 4rem;
+        position: fixed;
+        z-index: 22;
+    }
+</style>
+
+<script>
+    window.onload = function () {
+        var jets = new Jets({
+            searchTag: '#jetsSearch',
+            contentTag: '#jetsContent'
+        });
+    }
+</script>
+
+{% endblock %}

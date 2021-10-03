@@ -2,10 +2,22 @@
 
 
 {% block content %}
+<div id="front-page-blob">
+    <img src="static/blob1.svg" class="ribbon" />
+</div>
 
 <section class="section">
-    <h1 class="title is-1">Your Portfolio {{ user_score }}</h1>
     <div class="container">
+        <h1 class="title is-1 columns is-vcentered"><span class="column">Your Portfolio</span>
+            <div class="column is-narrow">
+                <div class="button is-large is-rounded ml-3 is-size-2
+                {{'is-success has-feedback' if user_score > 70 }}
+                {{'is-warning has-feedback' if user_score > 30 }}
+                {{'is-danger has-feedback' if user_score <= 30 }}
+                ">{{ (user_score | round |
+                    int) }}</div>
+            </div>
+        </h1>
         <pre></pre>
         <div id="bubble"></div>
         <table class="table is-striped is-fullwidth sortable">
@@ -21,14 +33,14 @@
             </thead>
             <tbody>
                 {% for stock in stock_data %}
-                    <tr>
-                        <td>{{stock['symbol']}}</td>
-                        <td>{{stock['amount']}}</td>
-                        <td>{{stock['esg']['esgScore']['TR.TRESG']['score'] if stock['esg'] else "-"}}</td>
-                        <td>{{stock['esg']['esgScore']['TR.EnvironmentPillar']['score'] if stock['esg'] else "-"}}</td>
-                        <td>{{stock['esg']['esgScore']['TR.SocialPillar']['score'] if stock['esg'] else "-"}}</td>
-                        <td>{{stock['esg']['esgScore']['TR.GovernancePillar']['score'] if stock['esg'] else "-"}}</td>
-                    </tr>
+                <tr>
+                    <td>{{stock['symbol']}}</td>
+                    <td>{{stock['amount']}}</td>
+                    <td>{{stock['esg']['esgScore']['TR.TRESG']['score'] if stock['esg'] else "-"}}</td>
+                    <td>{{stock['esg']['esgScore']['TR.EnvironmentPillar']['score'] if stock['esg'] else "-"}}</td>
+                    <td>{{stock['esg']['esgScore']['TR.SocialPillar']['score'] if stock['esg'] else "-"}}</td>
+                    <td>{{stock['esg']['esgScore']['TR.GovernancePillar']['score'] if stock['esg'] else "-"}}</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -47,13 +59,13 @@
         display: inline-block;
         position: relative;
         width: 100%;
-        padding-bottom: 50%;
+        padding-bottom: 530px;
         /* aspect ratio */
         vertical-align: top;
 
     }
 
-    .svg-container > svg{
+    .svg-container>svg {
         width: 100%;
         overflow: hidden;
         background: white;
@@ -65,6 +77,21 @@
         position: absolute;
         top: 10px;
         left: 0;
+    }
+
+    #front-page-blob {
+        position: relative;
+    }
+
+    #front-page-blob img {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 60%;
+        height: auto;
+        /* right: -100px;
+    width: 600px; 
+    height: 400px; */
     }
 </style>
 

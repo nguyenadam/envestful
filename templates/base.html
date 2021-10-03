@@ -2,27 +2,31 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Envestful</title>
-    <link rel="stylesheet" href="/static/bulma.css">
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src="/static/sorttable.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Envestful</title>
+  <link rel="stylesheet" href="/static/bulma.css">
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="/static/sorttable.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jets/0.14.1/jets.min.js"
+    integrity="sha512-C5x7QiS49O4ubITbqnAX93oOLk9/cASa+m8GawJMki1i4z8AjFDeklRCqiBBjj7niQULNW6nDhqf7l06zrZ9mA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </head>
 
 <body style="overflow: hidden;">
-    {% block content %}
-    {% endblock %}
+  {% block content %}
+  {% endblock %}
 
-    <footer class="footer">
-        <div class="content has-text-centered is-large">
-          <p>
-            <strong>Envestful</strong> by Adam Nguyen, Abby Hall, and <a href="https://jchacko.dev">Jonathan Chacko</a>. Made with 
-            ❄️ at HackDFW
-          </p>
-        </div>
-      </footer>
+  <footer class="footer" style="position: sticky;">
+    <div class="content has-text-centered is-large">
+      <p>
+        <strong>Envestful</strong> by Adam Nguyen, Abby Hall, and <a href="https://jchacko.dev">Jonathan Chacko</a>.
+        Made with
+        ❄️ at HackDFW
+      </p>
+    </div>
+  </footer>
 
 </body>
 
