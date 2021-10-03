@@ -5,27 +5,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Poppins&display=swap');
 
 // Set your brand colors
-$purple: #8A4D76;
-$pink: #FA7C91;
-$brown: #757763;
-$beige-light: #D0D1CD;
-$beige-lighter: #EFF0EB;
+// $purple: #8A4D76;
+// $pink: #FA7C91;
+// $brown: #757763;
+// $beige-light: #D0D1CD;
+// $beige-lighter: #EFF0EB;
+
+$dark-green: #31471B;
+$green: #59B73F;
+$green-lighter: #E6FFCF;
+$darkred: #FC3142;
+$yellow: #FED030;
+$orange: #FE9220;
+$green-success: #53D769;
 
 // Update Bulma's global variables
 $family-sans-serif: "Bree Serif", sans-serif;
 $body-family: "Poppins", sans-serif;
-$grey-dark: $brown;
-$grey-light: $beige-light;
-$primary: $purple;
-$link: $pink;
-$widescreen-enabled: false;
-$fullhd-enabled: false;
+// $grey-dark: $brown;
+$grey-light: $green-lighter;
+$primary: $dark-green;
+// $link: $green;
+$warning: $yellow;
+$danger: $darkred;
+$success: $green-success;
+// $widescreen-enabled: false;
+// $fullhd-enabled: false;
 
 // Update some of Bulma's component variables
-$body-background-color: $beige-lighter;
+$body-background-color: $green-lighter;
 $control-border-width: 2px;
-$input-border-color: transparent;
-$input-shadow: none;
+// $input-border-color: transparent;
+// $input-shadow: none;
+
+.title {
+    font-family: $family-sans-serif;
+}
 
 
 @import "node_modules/bulma/sass/utilities/_all.sass";

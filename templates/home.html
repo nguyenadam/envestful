@@ -4,20 +4,32 @@
 {% block content %}
 
 <div id="front-page-blob">
-    <img src="static/blob2.svg" class="ribbon" />
+    <img src="static/blob1.svg" class="ribbon" />
 </div>
 
-<div id="front-page-logo">
+<!-- <div id="front-page-logo">
     <img src="static/logo.png" class="ribbon" />
-</div>
+</div> -->
+
 <div>
     <section class="hero is-fullheight">
+        <div class="hero-head">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                  <div class="navbar-item ml-2" href="">
+                    <img src="static/logo.png" style="width: 18rem;height: auto;max-height: 5rem;max-width: 40vw;">
+                  </div>
+            
+                </div>
+              </nav>
+              
+        </div>
         <div class="hero-body">
-            <div>
+            <div class="container is-fluid">
                 <h1 class="title is-size-1-mobile tagline">
-                    Envest in a better world.
+                    Envest in a <br>better world.
                 </h1>
-                <a class="button is-success is-rounded" href="/login">Sign in with TD Ameritrade</a>
+                <a class="button is-primary is-rounded is-large is-size-6-touch" href="/login">Sign in with TD Ameritrade</a>
             </div>
         </div>
     </section>
@@ -29,8 +41,8 @@
 }
 #front-page-blob img {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: -10px;
+    right: -10px;
     width: 60%;
     height: auto;
     /* right: -100px;
@@ -47,8 +59,8 @@
 }
 
 .tagline {
-  max-width: 50%;
-  font-size: 5rem;
+  max-width: 60%;
+  font-size: 6vw;
 
 }
 
