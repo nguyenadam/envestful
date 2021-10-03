@@ -5,7 +5,7 @@ from td.client import TDClient
 from secret_list import *
 import json
 
-app = Flask("app")
+app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
 with open('data.json') as f:
@@ -97,5 +97,5 @@ def go():
 
     return jsonify(stock_objs)
 
-
-app.run(host="0.0.0.0", port=8080, debug=True)
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=8080, debug=True)
