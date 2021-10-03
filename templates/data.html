@@ -4,6 +4,7 @@
 {% block content %}
 
 <section class="section">
+    <h1 class="title is-1"> Your Portfolio</h1>
     <div class="container">
         <pre></pre>
         <div id="bubble"></div>
@@ -36,10 +37,34 @@
 </section>
 
 <style>
-    .svg-container > svg{
+    /* .svg-container > svg{
         border-radius: 8px;
         background: white;
         overflow: hidden;
+    } */
+
+    .svg-container {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        padding-bottom: 50%;
+        /* aspect ratio */
+        vertical-align: top;
+
+    }
+
+    .svg-container > svg{
+        width: 100%;
+        overflow: hidden;
+        background: white;
+        border-radius: 18px;
+    }
+
+    .svg-content-responsive {
+        display: inline-block;
+        position: absolute;
+        top: 10px;
+        left: 0;
     }
 </style>
 
@@ -56,9 +81,9 @@
     //     .range(['#FC3142', '#FE9220', '#FED030', '#53D769']);
 
     const color = (x) => {
-        if ( x < 25 ) return '#FC3142'
-        if ( x < 50 ) return '#FE9220'
-        if ( x < 75 ) return '#FED030'
+        if (x < 25) return '#FC3142'
+        if (x < 50) return '#FE9220'
+        if (x < 75) return '#FED030'
         return '#53D769'
 
     }
@@ -107,7 +132,7 @@
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 600 400")
         //class to make it responsive
-        .classed("svg-content-responsive", true); 
+        .classed("svg-content-responsive", true);
 
 
 
@@ -125,9 +150,10 @@
 
 
     node.append("text")
-        .attr("dy", ".3em")
+        .attr("dy", ".1em")
         .style("text-anchor", "middle")
-        .text(function (d) { return d.text.substring(0, d.radius / 3); });
+        .attr("font-size", ".8em")
+        .text(function (d) { return d.text; });
 
 
     function create_nodes(data, node_counter) {
@@ -138,7 +164,7 @@
             d = {
                 cluster: i,
                 esg: data[node_counter].esg ? data[node_counter].esg['esgScore']['TR.TRESG']['score'] : null,
-                radius: Math.sqrt(data[node_counter].amount * 1.5) + 10,
+                radius: Math.sqrt(data[node_counter].amount * 1.25) + 8,
                 text: data[node_counter].symbol,
                 x: Math.cos(i / m * 2 * Math.PI) * 200 + width / 2 * Math.random(),
                 y: Math.sin(i / m * 2 * Math.PI) * 200 + height / 2 * Math.random()
