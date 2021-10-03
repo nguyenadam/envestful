@@ -101,7 +101,13 @@ def go():
     print(session["token_info"])
     print(holdings)
 
-    return render_template('data.html', data = json.dumps(stock_objs), stock_data = stock_objs)
+    valid_stocks = [stock for stock in stock_objs if stock['esg']]
+    valid_cash = sum([stock['amount'] for stock in valid_stocks])
+
+    total_scores_cash = [ x['esg']['esgScore']['TR.TRESG']['score'] *( x['amount'] / valid_cash) for x in valid_stocks]
+    score = sum(total_scores_cash)
+
+    return render_template('data.html', data = json.dumps(stock_objs), stock_data = stock_objs, user_score = score)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)
