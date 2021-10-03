@@ -17,7 +17,6 @@ def get_positions(bearer):
     holdings = {}
 
     for account in accounts:
-        print(account)
         if "securitiesAccount" in account:
             for position in account["securitiesAccount"]["positions"]:
                 if position["instrument"]["assetType"] == "EQUITY":
