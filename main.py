@@ -101,7 +101,7 @@ def go():
     print(session["token_info"])
     print(holdings)
 
-    return render_template('data.html', data = json.dumps(stock_objs))
+    return render_template('data.html', data = json.dumps(stock_objs), stock_data = stock_objs)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)

@@ -7,7 +7,32 @@
     <div class="container">
         <pre></pre>
         <div id="bubble"></div>
+        <table class="table is-striped is-fullwidth sortable">
+            <thead>
+                <tr>
+                    <th>Stock</th>
+                    <th>Holdings</th>
+                    <th>ESG Score</th>
+                    <th>Environment</th>
+                    <th>Social</th>
+                    <th>Governance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stock_data %}
+                    <tr>
+                        <td>{{stock['symbol']}}</td>
+                        <td>{{stock['amount']}}</td>
+                        <td>{{stock['esg']['esgScore']['TR.TRESG']['score'] if stock['esg'] else "-"}}</td>
+                        <td>{{stock['esg']['esgScore']['TR.EnvironmentPillar']['score'] if stock['esg'] else "-"}}</td>
+                        <td>{{stock['esg']['esgScore']['TR.SocialPillar']['score'] if stock['esg'] else "-"}}</td>
+                        <td>{{stock['esg']['esgScore']['TR.GovernancePillar']['score'] if stock['esg'] else "-"}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+
 </section>
 
 <style>
@@ -37,9 +62,6 @@
         return '#53D769'
 
     }
-
-
-
 
     var data = {{ data | safe }};
 
