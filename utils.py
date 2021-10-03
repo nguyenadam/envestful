@@ -41,7 +41,6 @@ def get_access_token(code: str) -> dict:
         "client_id": CLIENT_ID + "@AMER.OAUTHAP",
         "code": code,
         "redirect_uri": REDIRECT_URI,
-        "access_type": "offline",
         "scope": "AccountAccess",
     }
 
@@ -56,22 +55,22 @@ def get_access_token(code: str) -> dict:
         return response.json()
 
 
-def refresh_access_token(refresh_token):
+# def refresh_access_token(refresh_token):
 
-    # build the parameters of our request
-    data = {
-        "client_id": CLIENT_ID,
-        "grant_type": "refresh_token",
-        "refresh_token": refresh_token,
-        "scope": "AccountAccess",
-    }
+#     # build the parameters of our request
+#     data = {
+#         "client_id": CLIENT_ID,
+#         "grant_type": "refresh_token",
+#         "refresh_token": refresh_token,
+#         "scope": "AccountAccess",
+#     }
 
-    # Make the request.
-    response = requests.post(
-        url="https://api.tdameritrade.com/v1/oauth2/token",
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-        data=data,
-    )
+#     # Make the request.
+#     response = requests.post(
+#         url="https://api.tdameritrade.com/v1/oauth2/token",
+#         headers={"Content-Type": "application/x-www-form-urlencoded"},
+#         data=data,
+#     )
 
-    if response.ok:
-        return response.json()
+#     if response.ok:
+#         return response.json()

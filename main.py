@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request, session, redirect, jsonify
-import time
+from datetime import date, datetime, timezone
 from utils import *
 from td.client import TDClient
 from secret_list import *
@@ -42,14 +42,16 @@ def get_token(session):
     token_info = session.get("token_info", None)
 
     # Checking if the session already has a token stored
-    if not token_info or "refresh_token" not in token_info:
+    if not token_info:
         return None
+    
+    now = datetime.now(timezone.utc)
 
     # Refreshing token if it has expired
-    if token_info.get("expires_in") < 0:
-        token_info = refresh_access_token(token_info.get("refresh_token"))
+    if 'refresh_time' not in session or (now - session['refresh_time']).total_seconds() > token_info.get("expires_in"):
+        # token_info = refresh_access_token(token_info.get("refresh_token"))
+        return None
 
-    session["token_info"] = {**session["token_info"], **token_info}
     return token_info
 
 
@@ -74,6 +76,7 @@ def api_callback():
     session.clear()
     code = request.args.get("code")
     token_info = get_access_token(code)
+    session['refresh_time'] = datetime.now(timezone.utc)
 
     # Saving the access token along with all other token related info
     session["token_info"] = token_info
@@ -95,7 +98,10 @@ def go():
     stock_objs = [{'symbol': stock, 'amount': amount, 'esg': esg_data[stock] if stock in esg_data else None} 
         for stock, amount in holdings.items() if amount > 0]
 
-    return jsonify(stock_objs)
+    print(session["token_info"])
+    print(holdings)
+
+    return render_template('data.html', data = json.dumps(stock_objs))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)
